@@ -11,17 +11,26 @@
     <script>
         var theDivs;
         var num;
+        var myslides;
+        var container;
+        var loaded = [];
+
         function setupPages() {
-            var myslides = document.getElementById("myslides");
+            container = document.getElementById("slider1_container");
+            myslides = document.getElementById("myslides");
             num = imagesList.length;
             var text = "";
             for (var i = 0; i < num; i++) {
-                text += '<div style="color: white;">x</div>';
+                text += '<div style="color: white;"></div>';
+                loaded[i] = false;
             }
             myslides.innerHTML = text;
             theDivs = document.querySelectorAll("#myslides div");
         }
+
         jssor_slider1_starter = function (containerId) {
+            setupPages();
+
             var options = {
                 $BulletNavigatorOptions: {                                
                     $Class: $JssorBulletNavigator$,                       
@@ -39,26 +48,53 @@
             };
 
             var jssor_slider1 = new $JssorSlider$(containerId, options);
+                        
 
             jssor_slider1.$On($JssorSlider$.$EVT_PARK,function(slideIndex, fromIndex){
+                /*
+                var pic_ratio = 1024/738;
+                var screen_ratio = window.innerWidth/ window.innerHeight;
+                var x, y;
+                if (screen_ratio > pic_ratio) {
+                    y = window.innerHeight;
+                    x = pic_ratio * y;
+                } else {
+                    x = window.innerWidth;
+                    y = x / pic_ratio;
+                }
+                
+                myslides = document.querySelectorAll(".ccc");
+                console.log(myslides);
+                container.style.width = x+"px";
+                container.style.height = y+"px";
+                myslides[0].style.width = x+"px";
+                myslides[0].style.height = y+"px";
+                myslides[1].style.width = x+"px";
+                myslides[1].style.height = y+"px";
+                */
+                var x = 1024;
+                var y = 738;
                 for (var g = 0; g < num; g++) {
                     if (Math.abs(slideIndex-g) <= 1) {
-                        if (theDivs[g].innerText === "x") {
-                            theDivs[g].innerHTML = '<img style="width: 1024px; height: 738px; top: 0px; left: 0px;" src="images/' + imagesList[g]+'" />';    
+                        if (!loaded[g]) {
+                            theDivs[g].innerHTML = '<img style="width: ' + x + 'px; height: ' + y + 'px; top: 0px; left: 0px;" src="images/' + imagesList[g]+'" />';
+                            loaded[g] = true;
                         }
                     } else {
-                        theDivs[g].innerText = "x";
+                        loaded[g] = false;
+                        theDivs[g].innerHTML = "";
                     }
                 }
             });
+
         };
     </script>
     <!-- Jssor Slider Begin -->
     <!-- You can move inline styles to css file or css block. -->
     <div id="slider1_container" style="position: relative; margin:0 auto; width: 1024px; height: 768px; background-color:#000;">
         <!-- Slides Container -->
-        <div id="myslides" u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 1024px; height: 738px; overflow: hidden;">
-            
+        <div id="myslides" class="ccc" u="slides" style="cursor: pointer; position: absolute; left: 0px; top: 0px; width: 1024px; height: 738px; overflow: default;">
+
         </div>
         
         <!-- Bullet Navigator Skin Begin -->
@@ -76,15 +112,15 @@
             .jssorb06 .dn, .jssorb06 .dn:hover { background-position: -96px -6px; }
         </style>
         <!-- bullet navigator container -->
+
         <div u="navigator" class="jssorb06" style="position: absolute; bottom: 5px; left: 6px;">
-            <!-- bullet navigator item prototype -->
-            <div u="prototype" style="POSITION: absolute; WIDTH: 18px; HEIGHT: 18px;"></div>
+            <div u="prototype" style="position: absolute; WIDTH: 18px; HEIGHT: 18px;"></div>
         </div>
+
         <!-- Bullet Navigator Skin End -->
 
         <!-- Trigger -->
         <script>
-            setupPages();
             jssor_slider1_starter('slider1_container');
         </script>
     </div>
